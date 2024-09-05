@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 export const Homepage = () => {
     const [usuario, setUsuario] = useState('');
@@ -19,12 +20,17 @@ export const Homepage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', {
-                username: usuario,
-                password: password,
+            // Hacemos la solicitud al backend con el endpoint correcto
+            const response = await axios.post('https://upc-codex.tech:5600/API/V2/login', {
+                usuario: usuario,
+                contrasena: password,
             });
 
             const { token } = response.data;
+
+            // Decodificar el token (opcional, solo si necesitas acceder a los datos del usuario)
+            const decodedToken = jwtDecode(token);
+            console.log("Datos del token decodificado: ", decodedToken);
             
             // Almacenar el token en localStorage
             localStorage.setItem('authToken', token);
@@ -94,7 +100,7 @@ export const Homepage = () => {
                             </div>
                             <button type="submit" className="btn w-full text-2xl font-bold btn-warning rounded-3xl">Continuar</button>
                         </form>
-                        <a className="link text-black">¿No eres Cliente?</a>
+                        <a href='/Registro' className="link text-black">¿No eres Cliente?</a>
                     </div>
                 </div>
             </main>

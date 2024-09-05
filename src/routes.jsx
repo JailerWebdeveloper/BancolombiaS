@@ -6,8 +6,7 @@ import RetirarDinero from './pages/RetirarDinero';
 import TransferirDinero from './pages/TransferirDinero';
 
 const isAuthenticated = () => {
-  // return localStorage.getItem('authToken') !== null;
-  return true
+  return localStorage.getItem('authToken') !== null;
 };
 
 function PrivateRoute({ children }) {

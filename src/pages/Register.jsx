@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Register = () => {
     const [formData, setFormData] = useState({
-        cedula: '',
+        cedula: 0,
         nombre: '',
         apellido: '',
         usuario: '',
@@ -23,15 +23,26 @@ export const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const data = {
+            cedula: parseInt(formData.cedula),
+            nombre: formData.nombre,
+            apellido: formData.apellido,
+            usuario: formData.usuario,
+            contrasena:formData.contrasena
+        }
+        console.log(data)
         try {
-            const response = await axios.post('/api/auth/register', formData);
-            const { token } = response.data;
-            
-            // Almacenar el token en localStorage
-            localStorage.setItem('authToken', token);
-            
-            // Redirigir a la ruta privada
-            navigate('/dashboard');
+            const response= axios.post('https://upc-codex.tech:5600/API/V2/Usuario/Registro', data, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status == 200) {
+                navigate('/');
+
+            }
         } catch (error) {
             console.error('Error al registrar', error);
             alert('Hubo un problema con el registro. Por favor, intenta de nuevo.');
@@ -65,8 +76,7 @@ export const Register = () => {
                                         id="cedula"
                                         name="cedula"
                                         placeholder="Cédula"
-                                        type="text"
-                                        value={formData.cedula}
+                                        type="number"
                                         onChange={handleInputChange}
                                         className="bg-inherit focus:outline-none pl-2 text-black w-full"
                                     />
@@ -131,7 +141,7 @@ export const Register = () => {
 
                             <button type="submit" className="btn w-full text-2xl font-bold btn-warning rounded-3xl">Registrarse</button>
                         </form>
-                        <a className="link text-black">¿Ya tienes cuenta? Inicia sesión</a>
+                        <a href='/' className="link text-black">¿Ya tienes cuenta? Inicia sesión</a>
                     </div>
                 </div>
             </main>
